@@ -1,11 +1,16 @@
 name: omnidetr
 channels:
-  - nvidia
   - pytorch
   - conda-forge
+  - nvidia
 dependencies:
-  - python=3.7
   - git
   - ca-certificates
   - openssl
+  - python=3.8
+  - pillow[version='>=5.3']
+  - cudatoolkit=11.1
+  - cudnn=8.0
+  - pytorch==1.9[build=*py3.8_cuda11.1*]
+
 prefix: /home/ec2-user/mambaforge/envs/omnidetr

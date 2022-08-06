@@ -12,5 +12,13 @@ dependencies:
   - cudatoolkit=11.1
   - cudnn=8.0
   - pytorch==1.9[build=*py3.8_cuda11.1*]
+  - torchvision=0.10[build=*py38_cu111*]
+  - pycocotools
+  - tqdm
+  - cython
+  - scipy
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
 
-prefix: /home/ec2-user/mambaforge/envs/omnidetr

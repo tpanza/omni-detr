@@ -1,0 +1,30 @@
+name: omnidetr-gpu
+channels:
+  - pytorch
+  - conda-forge
+  - nvidia
+dependencies:
+  - git
+  - ca-certificates
+  - openssl
+  - python=3.8
+  - pillow[version='>=5.3']
+  - jpeg=9e
+  - cudatoolkit=11.1
+  - cudnn=8.0
+  - pytorch==1.9[build=*py3.8_cuda11.1*]
+  #- torchvision=0.10[build=*py38_cu111*]
+  - pycocotools
+  - tqdm
+  - cython
+  - scipy
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - jupyterlab
+  - ipython
+  - ipykernel
+  - pip
+  - pip:
+    - opencv-python

@@ -1,0 +1,29 @@
+name: omnidetr-cpu
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - git
+  - ca-certificates
+  - openssl
+    #- python=3.8
+  - pillow[version='>=5.3']
+    #- jpeg=9b
+  - pytorch==1.9.1[build=cpu_py38*]
+  - pytorch-cpu=1.9.1
+  - torchvision=0.10.1[build=*py38*cpu*]
+  - cpuonly
+  - pycocotools
+  - tqdm
+  - cython
+  - scipy
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - jupyterlab
+  - ipython
+  - ipykernel
+  - pip
+  - pip:
+    - opencv-python

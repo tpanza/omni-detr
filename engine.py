@@ -18,19 +18,14 @@ import sys
 from collections import OrderedDict
 from typing import Iterable
 
-import scipy.optimize
 import torch
 import torch.nn as nn
-import torchvision
 
 import util.misc as utils
 from datasets.coco_eval import CocoEvaluator
 from datasets.data_prefetcher import data_prefetcher, data_prefetcher_semi
 from datasets.panoptic_eval import PanopticEvaluator
-from util import box_ops
-from util.box_ops import box_cxcywh_to_xyxy, generalized_box_iou
 from util.filtering import unified_filter_pseudo_labels
-from util.misc import NestedTensor
 
 
 def train_one_epoch(model: torch.nn.Module,

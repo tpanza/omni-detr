@@ -24,7 +24,7 @@ from typing import List, Optional
 
 import torch
 import torch.distributed as dist
-import torch.nn as nn
+import torch.nn as nn  # noqa: F401
 # needed due to empty tensor bug in pytorch and torchvision 0.5
 import torchvision
 from torch import Tensor

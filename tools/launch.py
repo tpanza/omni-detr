@@ -103,12 +103,8 @@ will not pass ``--local_rank`` when you specify this flag.
 """
 
 import os
-import socket
 import subprocess
-import sys
 from argparse import REMAINDER, ArgumentParser
-
-import torch
 
 
 def parse_args():

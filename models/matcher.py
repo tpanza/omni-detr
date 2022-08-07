@@ -159,7 +159,7 @@ class HungarianMatcher_semi(nn.Module):
         """
         with torch.no_grad():
 
-            if indicators == None:
+            if indicators is None:
                 num_batch = outputs['pred_logits'].shape[0]
                 indicators = [1 for i in range(num_batch)]
 

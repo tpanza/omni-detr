@@ -233,6 +233,8 @@ def make_coco_transforms(image_set):
         T.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
+    scales = [480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800]
+
     if image_set == 'train':
         return T.Compose([
             T.RandomHorizontalFlip(),
@@ -303,8 +305,6 @@ def make_coco_weak_transforms_with_record(image_set):
         Tr.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
-    scales = [480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800]
-
     if image_set == 'train':
         return Tr.Compose([
             Tr.RandomHorizontalFlip(),
@@ -369,8 +369,6 @@ def make_coco_weak_transforms_with_record600(image_set):
         Tr.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
-    scales = [480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800]
-
     if image_set == 'train':
         return Tr.Compose([
             Tr.RandomHorizontalFlip(),
@@ -389,7 +387,6 @@ def make_coco_weak_transforms_with_record600(image_set):
 def build(image_set, args):
     root = Path(args.data_path)
     assert root.exists(), f'provided COCO path {root} does not exist'
-    mode = 'instances'
     if args.dataset_file == "voc_omni":
         PATHS = {
             "train":

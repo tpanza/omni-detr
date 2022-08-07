@@ -89,7 +89,6 @@ def box_calibration(cur_boxes, cur_labels, cur_idx, records_unlabel_q,
         cropped_boxes = cur_boxes - torch.as_tensor([j, i, j, i]).cuda()
         cropped_boxes = torch.min(cropped_boxes.reshape(-1, 2, 2), max_size)
         cropped_boxes = cropped_boxes.clamp(min=0)
-        area = (cropped_boxes[:, 1, :] - cropped_boxes[:, 0, :]).prod(dim=1)
         cur_boxes = cropped_boxes.reshape(-1, 4)
         fields.append("boxes")
         cropped_boxes = torch.clone(cur_boxes)
@@ -375,7 +374,6 @@ def unified_filter_pseudo_labels(pseudo_unsup_outputs,
                 satisfied_class = targets_gt_unlabel_q
             satisfied_bbox = pseudo_unsup_bbox[satisfied_idx[0],
                                                satisfied_idx[1], :]
-            satisfied_points = targets_gt_point_unlabel_q
         else:  # boxesEC or boxesU
             pseudo_unsup_bbox = pseudo_unsup_outputs['pred_boxes']
             targets_gt_box_unlabel_q = targets_unlabel_k[0]['boxes']

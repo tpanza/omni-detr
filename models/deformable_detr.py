@@ -285,8 +285,7 @@ class SetCriterion(nn.Module):
         target_classes_onehot.scatter_(2, target_classes.unsqueeze(-1), 1)
 
         target_classes_onehot = target_classes_onehot[:, :, :-1]
-        loss_ce = sigmoid_focal_loss(src_logits, target_classes_onehot, num_boxes, alpha=self.focal_alpha, gamma=2) * \
-                  src_logits.shape[1]
+        loss_ce = sigmoid_focal_loss(src_logits, target_classes_onehot, num_boxes, alpha=self.focal_alpha, gamma=2) * src_logits.shape[1]
         losses = {'loss_ce': loss_ce}
 
         if log:
@@ -457,7 +456,7 @@ class SetCriterion(nn.Module):
                     kwargs['log'] = False
                 l_dict = self.get_loss(loss, enc_outputs, bin_targets, indices,
                                        num_boxes, **kwargs)
-                l_dict = {k + f'_enc': v for k, v in l_dict.items()}
+                l_dict = {k + '_enc': v for k, v in l_dict.items()}
                 losses.update(l_dict)
 
         return losses
@@ -682,7 +681,7 @@ class SetCriterion_semi(nn.Module):
                       The expected keys in each dict depends on the losses applied, see each loss' doc
         """
 
-        if indicators == None:
+        if indicators is None:
             num_batch = outputs['pred_logits'].shape[0]
             indicators = [1 for i in range(num_batch)]
 
@@ -745,7 +744,7 @@ class SetCriterion_semi(nn.Module):
                     kwargs['log'] = False
                 l_dict = self.get_loss(loss, enc_outputs, bin_targets, indices,
                                        num_boxes, indicators, **kwargs)
-                l_dict = {k + f'_enc': v for k, v in l_dict.items()}
+                l_dict = {k + '_enc': v for k, v in l_dict.items()}
                 losses.update(l_dict)
 
         return losses
@@ -848,7 +847,7 @@ def build(args):
                 {k + f'_{i}': v
                  for k, v in weight_dict.items()})
         aux_weight_dict.update(
-            {k + f'_enc': v
+            {k + '_enc': v
              for k, v in weight_dict.items()})
         weight_dict.update(aux_weight_dict)
 
@@ -935,7 +934,7 @@ def build_semi(args):
                 {k + f'_{i}': v
                  for k, v in weight_dict.items()})
         aux_weight_dict.update(
-            {k + f'_enc': v
+            {k + '_enc': v
              for k, v in weight_dict.items()})
         weight_dict.update(aux_weight_dict)
 

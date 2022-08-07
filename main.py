@@ -13,7 +13,6 @@
 import argparse
 import datetime
 import json
-import os
 import random
 import time
 from collections import OrderedDict
@@ -27,8 +26,7 @@ import datasets
 import datasets.samplers as samplers
 import util.misc as utils
 from datasets import build_dataset, get_coco_api_from_dataset
-from engine import (evaluate, train_one_epoch, train_one_epoch_burnin,
-                    train_one_epoch_semi)
+from engine import evaluate, train_one_epoch_burnin, train_one_epoch_semi
 from models import build_model, build_model_semi
 
 
@@ -68,8 +66,7 @@ def get_args_parser():
         '--frozen_weights',
         type=str,
         default=None,
-        help=
-        "Path to the pretrained model. If set, only the mask head will be trained"
+        help="Path to the pretrained model. If set, only the mask head will be trained"
     )
 
     # * Backbone
@@ -80,8 +77,7 @@ def get_args_parser():
     parser.add_argument(
         '--dilation',
         action='store_true',
-        help=
-        "If true, we replace stride with dilation in the last convolutional block (DC5)"
+        help="If true, we replace stride with dilation in the last convolutional block (DC5)"
     )
     parser.add_argument(
         '--position_embedding',
@@ -112,8 +108,7 @@ def get_args_parser():
         '--dim_feedforward',
         default=1024,
         type=int,
-        help=
-        "Intermediate size of the feedforward layers in the transformer blocks"
+        help="Intermediate size of the feedforward layers in the transformer blocks"
     )
     parser.add_argument(
         '--hidden_dim',
@@ -619,7 +614,7 @@ def main(args):
 
         else:
             if epoch >= args.BURN_IN_STEP:
-                if TEACHER_LOADED == False:
+                if not TEACHER_LOADED:
                     print('!!sucessfully transfer the student model!!')
                     # update and copy the whole model
                     keep_rate = 0.00

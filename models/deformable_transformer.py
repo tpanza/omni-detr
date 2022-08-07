@@ -9,12 +9,11 @@
 
 import copy
 import math
-from typing import List, Optional
 
 import torch
 import torch.nn.functional as F
-from torch import Tensor, nn
-from torch.nn.init import constant_, normal_, uniform_, xavier_uniform_
+from torch import nn
+from torch.nn.init import constant_, normal_, xavier_uniform_
 
 from models.ops.modules import MSDeformAttn
 from util.misc import inverse_sigmoid
@@ -102,7 +101,6 @@ class DeformableTransformer(nn.Module):
     def gen_encoder_output_proposals(self, memory, memory_padding_mask,
                                      spatial_shapes):
         N_, S_, C_ = memory.shape
-        base_scale = 4.0
         proposals = []
         _cur = 0
         for lvl, (H_, W_) in enumerate(spatial_shapes):

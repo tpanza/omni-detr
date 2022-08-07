@@ -90,7 +90,7 @@ def convert(xml_files, json_file):
             filename = get_and_check(root, "filename", 1).text
         else:
             raise ValueError("%d paths found in %s" % (len(path), xml_file))
-        ## The filename must be a number
+        # The filename must be a number
         image_id = get_filename_as_int(filename)
         size = get_and_check(root, "size", 1)
         width = int(get_and_check(size, "width", 1).text)
@@ -102,7 +102,7 @@ def convert(xml_files, json_file):
             "id": image_id,
         }
         json_dict["images"].append(image)
-        ## Currently we do not support segmentation.
+        # Currently we do not support segmentation.
         #  segmented = get_and_check(root, 'segmented', 1).text
         #  assert segmented == '0'
         for obj in get(root, "object"):
@@ -156,8 +156,7 @@ if __name__ == "__main__":
                         type=str)
     parser.add_argument(
         '--json_file',
-        default=
-        "../voc/VOCdevkit/VOC2007trainval/instances_VOC_trainval2007.json",
+        default="../voc/VOCdevkit/VOC2007trainval/instances_VOC_trainval2007.json",
         help="Output COCO format json file.",
         type=str)
     args = parser.parse_args()

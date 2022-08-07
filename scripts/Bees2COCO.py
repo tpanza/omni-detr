@@ -82,7 +82,7 @@ def convert(xml_files, json_file):
             filename_original = get_and_check(root, "filename", 1).text
         else:
             raise ValueError("%d paths found in %s" % (len(path), xml_file))
-        ## The filename must be a number
+        # The filename must be a number
         # image_id = get_filename_as_int(filename)
         filename = filename_original.split('_')
         filename = filename[-1]
@@ -122,7 +122,7 @@ def convert(xml_files, json_file):
                 "id": image_id,
             }
             json_dict["images"].append(image)
-            ## Currently we do not support segmentation.
+            # Currently we do not support segmentation.
             #  segmented = get_and_check(root, 'segmented', 1).text
             #  assert segmented == '0'
             for obj in get(root, "object"):
@@ -162,7 +162,7 @@ def convert(xml_files, json_file):
                 "id": image_id,
             }
             json_dict["images"].append(image)
-            ## Currently we do not support segmentation.
+            # Currently we do not support segmentation.
             #  segmented = get_and_check(root, 'segmented', 1).text
             #  assert segmented == '0'
             for obj in get(root, "object"):

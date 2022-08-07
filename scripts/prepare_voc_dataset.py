@@ -83,7 +83,7 @@ def main():
         sample_data['categories'] = list(coco_api.cats.values())
 
         output_file_label = '{}{}_semi_label.json'.format(root_dir, data_set)
-        ## save to json
+        # save to json
         with open(output_file_label, 'w') as f:
             print('writing to json output:', output_file_label)
             json.dump(sample_data, f, sort_keys=True)
@@ -157,7 +157,7 @@ def main():
         sample_data['categories'] = list(coco_api.cats.values())
 
         output_file_label = '{}{}.json'.format(root_dir, data_set)
-        ## save to json
+        # save to json
         with open(output_file_label, 'w') as f:
             print('writing to json output:', output_file_label)
             json.dump(sample_data, f, sort_keys=True)
@@ -231,7 +231,7 @@ def main():
         sample_data['categories'] = list(coco_api.cats.values())
 
         output_file_label = '{}{}_semi_unlabel.json'.format(root_dir, data_set)
-        ## save to json
+        # save to json
         with open(output_file_label, 'w') as f:
             print('writing to json output:', output_file_label)
             json.dump(sample_data, f, sort_keys=True)

@@ -83,7 +83,7 @@ def main():
     sample_data['licenses'] = coco_api.dataset['licenses']
 
     output_file_label = root_dir + 'instances_w_indicator_val2017.json'
-    ## save to json
+    # save to json
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
         json.dump(sample_data, f, sort_keys=True)

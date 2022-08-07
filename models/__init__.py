@@ -10,8 +10,8 @@
 # Modifications Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from .deformable_detr import build
-from .deformable_detr import build_semi
+from .deformable_detr import build, build_semi
+
 
 def build_model(args):
     return build(args)

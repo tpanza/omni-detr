@@ -9,12 +9,13 @@
 """
 Copy-Paste from torchvision, but add utility of caching images on memory
 """
-from torchvision.datasets.vision import VisionDataset
-from PIL import Image
 import os
 import os.path
-import tqdm
 from io import BytesIO
+
+import tqdm
+from PIL import Image
+from torchvision.datasets.vision import VisionDataset
 
 
 class CocoDetection(VisionDataset):

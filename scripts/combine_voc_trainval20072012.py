@@ -3,7 +3,9 @@
 
 import json
 import random
+
 from pycocotools.coco import COCO
+
 
 def main():
     root_dir = '../voc/VOCdevkit/VOC2007trainval/'

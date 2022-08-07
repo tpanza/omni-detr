@@ -19,10 +19,10 @@ import PIL
 import torch
 import torchvision.transforms as T
 import torchvision.transforms.functional as F
-
-from util.box_ops import box_xyxy_to_cxcywh, box_cxcywh_to_xyxy
-from util.misc import interpolate
 from PIL import ImageFilter
+
+from util.box_ops import box_cxcywh_to_xyxy, box_xyxy_to_cxcywh
+from util.misc import interpolate
 
 
 def erase(image, target, region):

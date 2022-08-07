@@ -27,6 +27,7 @@ from util.misc import (NestedTensor, accuracy, get_world_size, interpolate,
 from .backbone import build_backbone
 from .deformable_transformer import build_deforamble_transformer
 from .matcher import build_matcher, build_matcher_semi
+from .mlp import MLP
 from .segmentation import (DETRsegm, PostProcessPanoptic, PostProcessSegm,
                            dice_loss, sigmoid_focal_loss,
                            sigmoid_weighted_focal_loss)
@@ -794,22 +795,6 @@ class PostProcess(nn.Module):
         } for s, l, b in zip(scores, labels, boxes)]
 
         return results
-
-
-class MLP(nn.Module):
-    """ Very simple multi-layer perceptron (also called FFN)"""
-
-    def __init__(self, input_dim, hidden_dim, output_dim, num_layers):
-        super().__init__()
-        self.num_layers = num_layers
-        h = [hidden_dim] * (num_layers - 1)
-        self.layers = nn.ModuleList(
-            nn.Linear(n, k) for n, k in zip([input_dim] + h, h + [output_dim]))
-
-    def forward(self, x):
-        for i, layer in enumerate(self.layers):
-            x = F.relu(layer(x)) if i < self.num_layers - 1 else layer(x)
-        return x
 
 
 def build(args):

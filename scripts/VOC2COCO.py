@@ -5,10 +5,10 @@
 
 # pip install lxml
 
-import os
-import json
-import xml.etree.ElementTree as ET
 import glob
+import json
+import os
+import xml.etree.ElementTree as ET
 
 START_BOUNDING_BOX_ID = 1
 PRE_DEFINE_CATEGORIES = None

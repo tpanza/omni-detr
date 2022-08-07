@@ -8,10 +8,12 @@
 # ------------------------------------------------------------------------
 
 import torch.utils.data
-from .torchvision_datasets import CocoDetection
+
 from .coco import build as build_coco
 from .coco import build_semi_label as build_coco_semi_label
 from .coco import build_semi_unlabel as build_coco_semi_unlabel
+from .torchvision_datasets import CocoDetection
+
 
 def get_coco_api_from_dataset(dataset):
     for _ in range(10):

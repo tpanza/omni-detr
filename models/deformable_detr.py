@@ -13,21 +13,24 @@
 """
 model and criterion classes.
 """
+import copy
+import math
+
 import torch
 import torch.nn.functional as F
 from torch import nn
-import math
+
 from util import box_ops
-from util.misc import (NestedTensor, nested_tensor_from_tensor_list,
-                       accuracy, get_world_size, interpolate,
-                       is_dist_avail_and_initialized, inverse_sigmoid)
+from util.misc import (NestedTensor, accuracy, get_world_size, interpolate,
+                       inverse_sigmoid, is_dist_avail_and_initialized,
+                       nested_tensor_from_tensor_list)
 
 from .backbone import build_backbone
+from .deformable_transformer import build_deforamble_transformer
 from .matcher import build_matcher, build_matcher_semi
 from .segmentation import (DETRsegm, PostProcessPanoptic, PostProcessSegm,
-                           dice_loss, sigmoid_focal_loss, sigmoid_weighted_focal_loss)
-from .deformable_transformer import build_deforamble_transformer
-import copy
+                           dice_loss, sigmoid_focal_loss,
+                           sigmoid_weighted_focal_loss)
 
 
 def _get_clones(module, N):

@@ -104,11 +104,11 @@ will not pass ``--local_rank`` when you specify this flag.
 """
 
 
-import sys
-import subprocess
 import os
 import socket
-from argparse import ArgumentParser, REMAINDER
+import subprocess
+import sys
+from argparse import REMAINDER, ArgumentParser
 
 import torch
 

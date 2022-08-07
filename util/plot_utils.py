@@ -10,12 +10,12 @@
 """
 Plotting utilities to visualize training logs.
 """
-import torch
+from pathlib import Path, PurePath
+
+import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
-
-from pathlib import Path, PurePath
+import torch
 
 
 def plot_logs(logs, fields=('class_error', 'loss_bbox_unscaled', 'mAP'), ewm_col=0, log_name='log.txt'):

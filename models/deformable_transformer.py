@@ -8,16 +8,16 @@
 # ------------------------------------------------------------------------
 
 import copy
-from typing import Optional, List
 import math
+from typing import List, Optional
 
 import torch
 import torch.nn.functional as F
-from torch import nn, Tensor
-from torch.nn.init import xavier_uniform_, constant_, uniform_, normal_
+from torch import Tensor, nn
+from torch.nn.init import constant_, normal_, uniform_, xavier_uniform_
 
-from util.misc import inverse_sigmoid
 from models.ops.modules import MSDeformAttn
+from util.misc import inverse_sigmoid
 
 
 class DeformableTransformer(nn.Module):

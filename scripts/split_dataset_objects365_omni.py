@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import json
-import numpy as np
 import random
+
+import numpy as np
 from pycocotools.coco import COCO
 
 

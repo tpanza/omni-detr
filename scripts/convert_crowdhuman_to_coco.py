@@ -1,11 +1,12 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-import os
-import numpy as np
 import json
-import cv2
+import os
 import shutil
+
+import cv2
+import numpy as np
 
 DATA_PATH = '../crowdhuman/'
 OUT_PATH = DATA_PATH

@@ -1,10 +1,12 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-import torch
-from .box_ops import box_cxcywh_to_xyxy, box_xyxy_to_cxcywh, generalized_box_iou
 import scipy.optimize
+import torch
 import torch.nn as nn
+
+from .box_ops import (box_cxcywh_to_xyxy, box_xyxy_to_cxcywh,
+                      generalized_box_iou)
 
 
 def get_size_with_aspect_ratio(image_size, size, max_size=None):

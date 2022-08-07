@@ -13,20 +13,23 @@
 import argparse
 import datetime
 import json
+import os
 import random
 import time
+from collections import OrderedDict
 from pathlib import Path
-import os
+
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
+
 import datasets
-import util.misc as utils
 import datasets.samplers as samplers
+import util.misc as utils
 from datasets import build_dataset, get_coco_api_from_dataset
-from engine import evaluate, train_one_epoch, train_one_epoch_semi, train_one_epoch_burnin
+from engine import (evaluate, train_one_epoch, train_one_epoch_burnin,
+                    train_one_epoch_semi)
 from models import build_model, build_model_semi
-from collections import OrderedDict
 
 
 def get_args_parser():

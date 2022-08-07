@@ -1,10 +1,11 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-import os
-import json
-import xml.etree.ElementTree as ET
 import glob
+import json
+import os
+import xml.etree.ElementTree as ET
+
 import cv2
 
 START_BOUNDING_BOX_ID = 1

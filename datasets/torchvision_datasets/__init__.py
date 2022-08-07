@@ -4,5 +4,4 @@
 # Licensed under the Apache License, Version 2.0 [see LICENSE for details]
 # ------------------------------------------------------------------------
 
-from .coco import CocoDetection
-from .coco import CocoDetection_semi
+from .coco import CocoDetection, CocoDetection_semi

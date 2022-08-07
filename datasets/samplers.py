@@ -6,8 +6,9 @@
 # Modified from codes in torch.utils.data.distributed
 # ------------------------------------------------------------------------
 
-import os
 import math
+import os
+
 import torch
 import torch.distributed as dist
 from torch.utils.data.sampler import Sampler

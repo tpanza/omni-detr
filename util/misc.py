@@ -15,23 +15,24 @@ Misc functions, including distributed helpers.
 
 Mostly copy-paste from torchvision references.
 """
+import datetime
 import os
+import pickle
 import subprocess
 import time
 from collections import defaultdict, deque
-import datetime
-import pickle
-from typing import Optional, List
+from typing import List, Optional
 
 import torch
-import torch.nn as nn
 import torch.distributed as dist
-from torch import Tensor
-
+import torch.nn as nn
 # needed due to empty tensor bug in pytorch and torchvision 0.5
 import torchvision
+from torch import Tensor
+
 if float(torchvision.__version__[:3]) < 0.5:
     import math
+
     from torchvision.ops.misc import _NewEmptyTensorOp
     def _check_size_scale_factor(dim, size, scale_factor):
         # type: (int, Optional[List[int]], Optional[float]) -> None

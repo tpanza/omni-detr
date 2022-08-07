@@ -28,7 +28,7 @@ def main():
         for key, value in category.items():
             class_index_list.append(key)
 
-        histogram = np.zeros((num_classes,), dtype=np.int)
+        histogram = np.zeros((num_classes, ), dtype=np.int)
 
         img_ids = sorted(coco_api.imgs.keys())
         num_imgs = len(img_ids)
@@ -55,7 +55,8 @@ def main():
                 y0 = boxes[1]
                 x1 = boxes[2]
                 y1 = boxes[3]
-                cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0), (y1 - y0)
+                cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0), (y1 -
+                                                                         y0)
                 mean = (cy, cx)
                 cov = [[h / 2, 0], [0, w / 2]]
                 sampled_point_i = np.random.multivariate_normal(mean, cov, 1)
@@ -74,7 +75,7 @@ def main():
             histogram[index] = histogram[index] + 1
         class_ratios = histogram / np.sum(histogram)
         print("sampled class ratios: {}".format(class_ratios))
-        print("each class has at least one example ", np.min(histogram)>0)
+        print("each class has at least one example ", np.min(histogram) > 0)
 
         sample_data = {}
         sample_data['images'] = imgs
@@ -101,7 +102,7 @@ def main():
         for key, value in category.items():
             class_index_list.append(key)
 
-        histogram = np.zeros((num_classes,), dtype=np.int)
+        histogram = np.zeros((num_classes, ), dtype=np.int)
 
         img_ids = sorted(coco_api.imgs.keys())
         num_imgs = len(img_ids)
@@ -128,7 +129,8 @@ def main():
                 y0 = boxes[1]
                 x1 = boxes[2]
                 y1 = boxes[3]
-                cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0), (y1 - y0)
+                cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0), (y1 -
+                                                                         y0)
                 mean = (cy, cx)
                 cov = [[h / 2, 0], [0, w / 2]]
                 sampled_point_i = np.random.multivariate_normal(mean, cov, 1)
@@ -174,7 +176,7 @@ def main():
         for key, value in category.items():
             class_index_list.append(key)
 
-        histogram = np.zeros((num_classes,), dtype=np.int)
+        histogram = np.zeros((num_classes, ), dtype=np.int)
 
         img_ids = sorted(coco_api.imgs.keys())
         num_imgs = len(img_ids)
@@ -201,7 +203,8 @@ def main():
                 y0 = boxes[1]
                 x1 = boxes[2]
                 y1 = boxes[3]
-                cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0), (y1 - y0)
+                cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0), (y1 -
+                                                                         y0)
                 mean = (cy, cx)
                 cov = [[h / 2, 0], [0, w / 2]]
                 sampled_point_i = np.random.multivariate_normal(mean, cov, 1)
@@ -232,6 +235,7 @@ def main():
         with open(output_file_label, 'w') as f:
             print('writing to json output:', output_file_label)
             json.dump(sample_data, f, sort_keys=True)
+
 
 if __name__ == '__main__':
     main()

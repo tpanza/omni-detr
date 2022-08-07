@@ -52,6 +52,7 @@ def main():
         print('writing to json output:', output_file_label)
         json.dump(data, f, sort_keys=True)
 
+
 if __name__ == '__main__':
     main()
     print("finished!")

@@ -6,11 +6,9 @@
 # Modified from DETR (https://github.com/facebookresearch/detr)
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
 # ------------------------------------------------------------------------
-
 """
 Backbone modules.
 """
-from collections import OrderedDict
 from typing import Dict, List
 
 import torch
@@ -47,9 +45,10 @@ class FrozenBatchNorm2d(torch.nn.Module):
         if num_batches_tracked_key in state_dict:
             del state_dict[num_batches_tracked_key]
 
-        super(FrozenBatchNorm2d, self)._load_from_state_dict(
-            state_dict, prefix, local_metadata, strict,
-            missing_keys, unexpected_keys, error_msgs)
+        super(FrozenBatchNorm2d,
+              self)._load_from_state_dict(state_dict, prefix, local_metadata,
+                                          strict, missing_keys,
+                                          unexpected_keys, error_msgs)
 
     def forward(self, x):
         # move reshapes to the beginning
@@ -66,7 +65,8 @@ class FrozenBatchNorm2d(torch.nn.Module):
 
 class BackboneBase(nn.Module):
 
-    def __init__(self, backbone: nn.Module, train_backbone: bool, return_interm_layers: bool):
+    def __init__(self, backbone: nn.Module, train_backbone: bool,
+                 return_interm_layers: bool):
         super().__init__()
         for name, parameter in backbone.named_parameters():
             if not train_backbone or 'layer2' not in name and 'layer3' not in name and 'layer4' not in name:
@@ -80,7 +80,8 @@ class BackboneBase(nn.Module):
             return_layers = {'layer4': "0"}
             self.strides = [32]
             self.num_channels = [2048]
-        self.body = IntermediateLayerGetter(backbone, return_layers=return_layers)
+        self.body = IntermediateLayerGetter(backbone,
+                                            return_layers=return_layers)
 
     def forward(self, tensor_list: NestedTensor):
         xs = self.body(tensor_list.tensors)
@@ -88,22 +89,24 @@ class BackboneBase(nn.Module):
         for name, x in xs.items():
             m = tensor_list.mask
             assert m is not None
-            mask = F.interpolate(m[None].float(), size=x.shape[-2:]).to(torch.bool)[0]
+            mask = F.interpolate(m[None].float(),
+                                 size=x.shape[-2:]).to(torch.bool)[0]
             out[name] = NestedTensor(x, mask)
         return out
 
 
 class Backbone(BackboneBase):
     """ResNet backbone with frozen BatchNorm."""
-    def __init__(self, name: str,
-                 train_backbone: bool,
-                 return_interm_layers: bool,
-                 dilation: bool):
+
+    def __init__(self, name: str, train_backbone: bool,
+                 return_interm_layers: bool, dilation: bool):
         norm_layer = FrozenBatchNorm2d
         backbone = getattr(torchvision.models, name)(
             replace_stride_with_dilation=[False, False, dilation],
-            pretrained=is_main_process(), norm_layer=norm_layer)
-        assert name not in ('resnet18', 'resnet34'), "number of channels are hard coded"
+            pretrained=is_main_process(),
+            norm_layer=norm_layer)
+        assert name not in ('resnet18',
+                            'resnet34'), "number of channels are hard coded"
 
         super().__init__(backbone, train_backbone, return_interm_layers)
         if dilation:
@@ -111,6 +114,7 @@ class Backbone(BackboneBase):
 
 
 class Joiner(nn.Sequential):
+
     def __init__(self, backbone, position_embedding):
         super().__init__(backbone, position_embedding)
         self.strides = backbone.strides
@@ -134,6 +138,7 @@ def build_backbone(args):
     position_embedding = build_position_encoding(args)
     train_backbone = args.lr_backbone > 0
     return_interm_layers = args.masks or (args.num_feature_levels > 1)
-    backbone = Backbone(args.backbone, train_backbone, return_interm_layers, args.dilation)
+    backbone = Backbone(args.backbone, train_backbone, return_interm_layers,
+                        args.dilation)
     model = Joiner(backbone, position_embedding)
     return model

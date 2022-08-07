@@ -36,7 +36,8 @@ def main():
         if i_img['width'] > 600 or i_img['height'] > 600:
             width = i_img['width']
             height = i_img['height']
-            if (width <= height and width == 600) or (height <= width and height == 600):
+            if (width <= height and width == 600) or (height <= width
+                                                      and height == 600):
                 oh = height
                 ow = width
             if width < height:
@@ -47,7 +48,8 @@ def main():
                 ow = int(600 * width / height)
 
             id_to_downscale.append(i_img['id'])
-            original_img = cv2.imread(root_dir + 'Images/' + i_img['file_name'])
+            original_img = cv2.imread(root_dir + 'Images/' +
+                                      i_img['file_name'])
             resized_img = cv2.resize(original_img, (ow, oh))
             ratios = [float(ow) / float(width), float(oh) / float(height)]
             ratio_width, ratio_height = ratios
@@ -141,6 +143,7 @@ def main():
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
         json.dump(sample_data, f, sort_keys=True)
+
 
 if __name__ == '__main__':
     main()

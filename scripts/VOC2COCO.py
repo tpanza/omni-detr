@@ -13,7 +13,6 @@ import xml.etree.ElementTree as ET
 START_BOUNDING_BOX_ID = 1
 PRE_DEFINE_CATEGORIES = None
 
-
 # If necessary, pre-define category and its id
 #  PRE_DEFINE_CATEGORIES = {"aeroplane": 1, "bicycle": 2, "bird": 3, "boat": 4,
 #  "bottle":5, "bus": 6, "car": 7, "cat": 8, "chair": 9,
@@ -32,10 +31,8 @@ def get_and_check(root, name, length):
     if len(vars) == 0:
         raise ValueError("Can not find %s in %s." % (name, root.tag))
     if length > 0 and len(vars) != length:
-        raise ValueError(
-            "The size of %s is supposed to be %d, but is %d."
-            % (name, length, len(vars))
-        )
+        raise ValueError("The size of %s is supposed to be %d, but is %d." %
+                         (name, length, len(vars)))
     if length == 1:
         vars = vars[0]
     return vars
@@ -47,7 +44,8 @@ def get_filename_as_int(filename):
         filename = os.path.splitext(os.path.basename(filename))[0]
         return int(filename)
     except:
-        raise ValueError("Filename %s is supposed to be an integer." % (filename))
+        raise ValueError("Filename %s is supposed to be an integer." %
+                         (filename))
 
 
 def get_categories(xml_files):
@@ -71,7 +69,12 @@ def get_categories(xml_files):
 
 
 def convert(xml_files, json_file):
-    json_dict = {"images": [], "type": "instances", "annotations": [], "categories": []}
+    json_dict = {
+        "images": [],
+        "type": "instances",
+        "annotations": [],
+        "categories": []
+    }
     if PRE_DEFINE_CATEGORIES is not None:
         categories = PRE_DEFINE_CATEGORIES
     else:
@@ -146,10 +149,17 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Convert Pascal VOC annotation to COCO format."
-    )
-    parser.add_argument('--xml_dir', default="../voc/VOCdevkit/VOC2007trainval/Annotations", help="Directory path to xml files.", type=str)
-    parser.add_argument('--json_file', default="../voc/VOCdevkit/VOC2007trainval/instances_VOC_trainval2007.json", help="Output COCO format json file.", type=str)
+        description="Convert Pascal VOC annotation to COCO format.")
+    parser.add_argument('--xml_dir',
+                        default="../voc/VOCdevkit/VOC2007trainval/Annotations",
+                        help="Directory path to xml files.",
+                        type=str)
+    parser.add_argument(
+        '--json_file',
+        default=
+        "../voc/VOCdevkit/VOC2007trainval/instances_VOC_trainval2007.json",
+        help="Output COCO format json file.",
+        type=str)
     args = parser.parse_args()
     xml_files = glob.glob(os.path.join(args.xml_dir, "*.xml"))
 

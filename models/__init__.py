@@ -16,5 +16,6 @@ from .deformable_detr import build, build_semi
 def build_model(args):
     return build(args)
 
+
 def build_model_semi(args):
     return build_semi(args)

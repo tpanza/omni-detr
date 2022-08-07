@@ -9,7 +9,6 @@
 # ------------------------------------------------------------------------
 # Modifications Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
-
 """
 Modules to compute the matching cost and solve the corresponding LSAP.
 """
@@ -70,8 +69,10 @@ class HungarianMatcher(nn.Module):
             bs, num_queries = outputs["pred_logits"].shape[:2]
 
             # We flatten to compute the cost matrices in a batch
-            out_prob = outputs["pred_logits"].flatten(0, 1).sigmoid()  # (2*300) * 91
-            out_bbox = outputs["pred_boxes"].flatten(0, 1)  # (2*300) * 4  # [batch_size * num_queries, 4]
+            out_prob = outputs["pred_logits"].flatten(
+                0, 1).sigmoid()  # (2*300) * 91
+            out_bbox = outputs["pred_boxes"].flatten(
+                0, 1)  # (2*300) * 4  # [batch_size * num_queries, 4]
 
             # Also concat the target labels and boxes
             # here for example, the first instance has two ground truth bounding boxes, the second has four
@@ -81,25 +82,34 @@ class HungarianMatcher(nn.Module):
             # Compute the classification cost.
             alpha = 0.25
             gamma = 2.0
-            neg_cost_class = (1 - alpha) * (out_prob ** gamma) * (-(1 - out_prob + 1e-8).log())
-            pos_cost_class = alpha * ((1 - out_prob) ** gamma) * (-(out_prob + 1e-8).log())
-            cost_class = pos_cost_class[:, tgt_ids] - neg_cost_class[:, tgt_ids]  # 600 * 6
+            neg_cost_class = (1 - alpha) * (out_prob**gamma) * (
+                -(1 - out_prob + 1e-8).log())
+            pos_cost_class = alpha * (
+                (1 - out_prob)**gamma) * (-(out_prob + 1e-8).log())
+            cost_class = pos_cost_class[:,
+                                        tgt_ids] - neg_cost_class[:,
+                                                                  tgt_ids]  # 600 * 6
 
             # Compute the L1 cost between boxes
             cost_bbox = torch.cdist(out_bbox, tgt_bbox, p=1)  # 600 * 6
 
             # Compute the giou cost betwen boxes
-            cost_giou = -generalized_box_iou(box_cxcywh_to_xyxy(out_bbox),
-                                             box_cxcywh_to_xyxy(tgt_bbox))  # 600 * 6
+            cost_giou = -generalized_box_iou(
+                box_cxcywh_to_xyxy(out_bbox),
+                box_cxcywh_to_xyxy(tgt_bbox))  # 600 * 6
 
             # Final cost matrix
             C = self.cost_bbox * cost_bbox + self.cost_class * cost_class + self.cost_giou * cost_giou  # 600 * 6
             C = C.view(bs, num_queries, -1).cpu()  # 2 * 300 * 6
 
             sizes = [len(v["boxes"]) for v in targets]  # [2,4]
-            indices = [linear_sum_assignment(c[i]) for i, c in enumerate(C.split(sizes, -1))]
-            return [(torch.as_tensor(i, dtype=torch.int64), torch.as_tensor(j, dtype=torch.int64)) for i, j in indices]
-
+            indices = [
+                linear_sum_assignment(c[i])
+                for i, c in enumerate(C.split(sizes, -1))
+            ]
+            return [(torch.as_tensor(i, dtype=torch.int64),
+                     torch.as_tensor(j, dtype=torch.int64))
+                    for i, j in indices]
 
 
 class HungarianMatcher_semi(nn.Module):
@@ -149,7 +159,7 @@ class HungarianMatcher_semi(nn.Module):
         """
         with torch.no_grad():
 
-            if indicators == None:
+            if indicators is None:
                 num_batch = outputs['pred_logits'].shape[0]
                 indicators = [1 for i in range(num_batch)]
 
@@ -167,9 +177,12 @@ class HungarianMatcher_semi(nn.Module):
             # Compute the classification cost.
             alpha = 0.25
             gamma = 2.0
-            neg_cost_class = (1 - alpha) * (out_prob ** gamma) * (-(1 - out_prob + 1e-8).log())
-            pos_cost_class = alpha * ((1 - out_prob) ** gamma) * (-(out_prob + 1e-8).log())
-            cost_class = pos_cost_class[:, tgt_ids] - neg_cost_class[:, tgt_ids]
+            neg_cost_class = (1 - alpha) * (out_prob**gamma) * (
+                -(1 - out_prob + 1e-8).log())
+            pos_cost_class = alpha * (
+                (1 - out_prob)**gamma) * (-(out_prob + 1e-8).log())
+            cost_class = pos_cost_class[:, tgt_ids] - neg_cost_class[:,
+                                                                     tgt_ids]
 
             # Compute the L1 cost between boxes
             cost_bbox = torch.cdist(out_bbox, tgt_bbox, p=1)
@@ -178,9 +191,11 @@ class HungarianMatcher_semi(nn.Module):
             cost_giou = -generalized_box_iou(box_cxcywh_to_xyxy(out_bbox),
                                              box_cxcywh_to_xyxy(tgt_bbox))
 
-
             # compute indicator matrix
-            indicator_matrix = torch.cat([i*torch.ones(num_queries, cost_class.shape[-1]) for i in indicators])
+            indicator_matrix = torch.cat([
+                i * torch.ones(num_queries, cost_class.shape[-1])
+                for i in indicators
+            ])
             indicator_matrix = indicator_matrix.cuda()
 
             # Final cost matrix
@@ -200,9 +215,13 @@ class HungarianMatcher_semi(nn.Module):
             # ------------------
 
             sizes = [len(v["boxes"]) for v in targets]
-            indices = [linear_sum_assignment(c[i]) for i, c in enumerate(C.split(sizes, -1))]
-            return [(torch.as_tensor(i, dtype=torch.int64), torch.as_tensor(j, dtype=torch.int64)) for i, j in indices]
-
+            indices = [
+                linear_sum_assignment(c[i])
+                for i, c in enumerate(C.split(sizes, -1))
+            ]
+            return [(torch.as_tensor(i, dtype=torch.int64),
+                     torch.as_tensor(j, dtype=torch.int64))
+                    for i, j in indices]
 
 
 def build_matcher(args):
@@ -210,7 +229,8 @@ def build_matcher(args):
                             cost_bbox=args.set_cost_bbox,
                             cost_giou=args.set_cost_giou)
 
+
 def build_matcher_semi(args):
     return HungarianMatcher_semi(cost_class=args.set_cost_class,
-                            cost_bbox=args.set_cost_bbox,
-                            cost_giou=args.set_cost_giou)
+                                 cost_bbox=args.set_cost_bbox,
+                                 cost_giou=args.set_cost_giou)

@@ -34,7 +34,8 @@ def main():
         imgIds_i = coco_api.getImgIds(catIds=catIds)
         augmented_list = list(set(imgIds_i) - set(all_satisfied_imgID))
         if len(augmented_list) > maximum_example_per_category:
-            augmented_list = random.sample(augmented_list, maximum_example_per_category)
+            augmented_list = random.sample(augmented_list,
+                                           maximum_example_per_category)
         all_satisfied_imgID.extend(augmented_list)
         category_count += 1
 
@@ -42,7 +43,7 @@ def main():
 
     # original statistics
     num_classes = len(coco_api.cats)
-    histogram = np.zeros((num_classes,), dtype=np.int)
+    histogram = np.zeros((num_classes, ), dtype=np.int)
     random.seed(random_seed)
 
     sample_ids = sorted(all_satisfied_imgID)
@@ -58,7 +59,7 @@ def main():
         histogram[index] = histogram[index] + 1
     class_ratios = histogram / np.sum(histogram)
     print("sampled class ratios: {}".format(class_ratios))
-    print("each class has at least one example ", np.min(histogram)>0)
+    print("each class has at least one example ", np.min(histogram) > 0)
 
     sample_data = {}
     sample_data['images'] = imgs

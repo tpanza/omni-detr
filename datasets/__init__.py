@@ -24,6 +24,7 @@ def get_coco_api_from_dataset(dataset):
     if isinstance(dataset, CocoDetection):
         return dataset.coco
 
+
 def build_dataset(image_set, label, args):
     if args.dataset_file == 'coco' and label == True:
         return build_coco(image_set, args)

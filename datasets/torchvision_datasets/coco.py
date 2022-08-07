@@ -5,7 +5,6 @@
 # ------------------------------------------------------------------------
 # Modified from torchvision
 # ------------------------------------------------------------------------
-
 """
 Copy-Paste from torchvision, but add utility of caching images on memory
 """
@@ -31,9 +30,17 @@ class CocoDetection(VisionDataset):
             and returns a transformed version.
     """
 
-    def __init__(self, root, annFile, transform=None, target_transform=None, transforms=None,
-                 cache_mode=False, local_rank=0, local_size=1):
-        super(CocoDetection, self).__init__(root, transforms, transform, target_transform)
+    def __init__(self,
+                 root,
+                 annFile,
+                 transform=None,
+                 target_transform=None,
+                 transforms=None,
+                 cache_mode=False,
+                 local_rank=0,
+                 local_size=1):
+        super(CocoDetection, self).__init__(root, transforms, transform,
+                                            target_transform)
         from pycocotools.coco import COCO
         self.coco = COCO(annFile)
         self.ids = list(sorted(self.coco.imgs.keys()))
@@ -98,9 +105,17 @@ class CocoDetection_semi(VisionDataset):
             and returns a transformed version.
     """
 
-    def __init__(self, root, annFile, transform=None, target_transform=None, transforms=None,
-                 cache_mode=False, local_rank=0, local_size=1):
-        super(CocoDetection_semi, self).__init__(root, transforms, transform, target_transform)
+    def __init__(self,
+                 root,
+                 annFile,
+                 transform=None,
+                 target_transform=None,
+                 transforms=None,
+                 cache_mode=False,
+                 local_rank=0,
+                 local_size=1):
+        super(CocoDetection_semi, self).__init__(root, transforms, transform,
+                                                 target_transform)
         from pycocotools.coco import COCO
         self.coco = COCO(annFile)
         self.ids = list(sorted(self.coco.imgs.keys()))

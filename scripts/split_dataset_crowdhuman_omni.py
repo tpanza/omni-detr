@@ -25,7 +25,9 @@ def main():
     pointsK = 0.0
     boxesEC = 0.46
     boxesU = 0.0
-    assert sum([fully_labeled, Unsup, tagsU, tagsK, pointsU, pointsK, boxesEC, boxesU]) == 1.0
+    assert sum([
+        fully_labeled, Unsup, tagsU, tagsK, pointsU, pointsK, boxesEC, boxesU
+    ]) == 1.0
 
     # we first sample the fully label data
     # original statistics
@@ -34,7 +36,7 @@ def main():
     category = coco_api.cats
     for key, value in category.items():
         class_index_list.append(key)
-    histogram = np.zeros((num_classes,), dtype=np.int)
+    histogram = np.zeros((num_classes, ), dtype=np.int)
 
     img_ids = sorted(coco_api.imgs.keys())
     num_imgs = len(img_ids)
@@ -102,7 +104,11 @@ def main():
     sample_data['annotations'] = anns
     sample_data['categories'] = list(coco_api.cats.values())
 
-    output_file_label = '{}{}_crowdhuman_omni_label_seed{}_{}fully{}Unsup{}tagsU{}tagsK{}pointsU{}pointsK{}boxesEC{}boxesU.json'.format(root_dir, data_set, random_seed, round(100*fully_labeled), round(100*Unsup), round(100*tagsU), round(100*tagsK), round(100*pointsU), round(100*pointsK), round(100*boxesEC), round(100*boxesU))
+    output_file_label = '{}{}_crowdhuman_omni_label_seed{}_{}fully{}Unsup{}tagsU{}tagsK{}pointsU{}pointsK{}boxesEC{}boxesU.json'.format(
+        root_dir, data_set, random_seed, round(100 * fully_labeled),
+        round(100 * Unsup), round(100 * tagsU), round(100 * tagsK),
+        round(100 * pointsU), round(100 * pointsK), round(100 * boxesEC),
+        round(100 * boxesU))
     ## save to json
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
@@ -133,7 +139,7 @@ def main():
         splitting['boxesU'] = round(num_imgs * boxesU)
 
     for key, value in splitting.items():
-        histogram = np.zeros((num_classes,), dtype=np.int)
+        histogram = np.zeros((num_classes, ), dtype=np.int)
         num_samples = value
         if num_samples > len(unsampled_ids):  #
             num_samples = len(unsampled_ids)
@@ -161,7 +167,9 @@ def main():
                 y1 = int(boxes[1]) + int(boxes[3])
                 point_x = random.randint(x0, x1)
                 point_y = random.randint(y0, y1)
-                i_ann['point'] = [float(point_x), float(point_y)]  # why get points for all sampled images? are points used?
+                i_ann['point'] = [
+                    float(point_x), float(point_y)
+                ]  # why get points for all sampled images? are points used?
             else:
                 i_ann['point'] = []
                 print(i_ann['bbox'])
@@ -193,7 +201,8 @@ def main():
                 if ith > skip_to_next:
                     ith_bin += 1
                     cur_delta = delta[ith_bin]
-                    skip_to_next = skip_to_next + distribution_extreme[ith_bin] * len(anns)
+                    skip_to_next = skip_to_next + distribution_extreme[
+                        ith_bin] * len(anns)
                     print('to next')
                 if 'iscrowd' not in i_ann or i_ann['iscrowd'] == 0:
                     box_i = i_ann['bbox']
@@ -205,15 +214,21 @@ def main():
                     y1 = boxes[3]
 
                     # add noise to each of the two nodes
-                    cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0), (y1 - y0)
+                    cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, (x1 -
+                                                                  x0), (y1 -
+                                                                        y0)
                     mean = (y0, x0)
                     cov = [[h / cur_delta, 0], [0, w / cur_delta]]
-                    sampled_point_i = np.random.multivariate_normal(mean, cov, 1)
-                    x0_new, y0_new = sampled_point_i[0, 1], sampled_point_i[0, 0]
+                    sampled_point_i = np.random.multivariate_normal(
+                        mean, cov, 1)
+                    x0_new, y0_new = sampled_point_i[0, 1], sampled_point_i[0,
+                                                                            0]
 
                     mean = (y1, x1)
-                    sampled_point_i = np.random.multivariate_normal(mean, cov, 1)
-                    x1_new, y1_new = sampled_point_i[0, 1], sampled_point_i[0, 0]
+                    sampled_point_i = np.random.multivariate_normal(
+                        mean, cov, 1)
+                    x1_new, y1_new = sampled_point_i[0, 1], sampled_point_i[0,
+                                                                            0]
 
                     x0 = min(x0_new, x1_new)
                     x1 = max(x0_new, x1_new)
@@ -252,7 +267,11 @@ def main():
     unsample_data['annotations'] = anns_all
     unsample_data['categories'] = list(coco_api.cats.values())
 
-    output_file_unlabel = '{}{}_crowdhuman_omni_unlabel_seed{}_{}fully{}Unsup{}tagsU{}tagsK{}pointsU{}pointsK{}boxesEC{}boxesU.json'.format(root_dir, data_set, random_seed, round(100*fully_labeled), round(100*Unsup), round(100*tagsU), round(100*tagsK), round(100*pointsU), round(100*pointsK), round(100*boxesEC), round(100*boxesU))
+    output_file_unlabel = '{}{}_crowdhuman_omni_unlabel_seed{}_{}fully{}Unsup{}tagsU{}tagsK{}pointsU{}pointsK{}boxesEC{}boxesU.json'.format(
+        root_dir, data_set, random_seed, round(100 * fully_labeled),
+        round(100 * Unsup), round(100 * tagsU), round(100 * tagsK),
+        round(100 * pointsU), round(100 * pointsK), round(100 * boxesEC),
+        round(100 * boxesU))
     ## save to json
     with open(output_file_unlabel, 'w') as f:
         print('writing to json output:', output_file_unlabel)

@@ -9,7 +9,6 @@
 # ------------------------------------------------------------------------
 # Modifications Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
-
 """
 Misc functions, including distributed helpers.
 
@@ -34,17 +33,19 @@ if float(torchvision.__version__[:3]) < 0.5:
     import math
 
     from torchvision.ops.misc import _NewEmptyTensorOp
+
     def _check_size_scale_factor(dim, size, scale_factor):
         # type: (int, Optional[List[int]], Optional[float]) -> None
         if size is None and scale_factor is None:
             raise ValueError("either size or scale_factor should be defined")
         if size is not None and scale_factor is not None:
-            raise ValueError("only one of size or scale_factor should be defined")
-        if not (scale_factor is not None and len(scale_factor) != dim):
             raise ValueError(
-                "scale_factor shape must match input shape. "
-                "Input is {}D, scale_factor size is {}".format(dim, len(scale_factor))
-            )
+                "only one of size or scale_factor should be defined")
+        if not (scale_factor is not None and len(scale_factor) != dim):
+            raise ValueError("scale_factor shape must match input shape. "
+                             "Input is {}D, scale_factor size is {}".format(
+                                 dim, len(scale_factor)))
+
     def _output_size(dim, input, size, scale_factor):
         # type: (int, Tensor, Optional[List[int]], Optional[float]) -> List[int]
         assert dim == 2
@@ -52,11 +53,13 @@ if float(torchvision.__version__[:3]) < 0.5:
         if size is not None:
             return size
         # if dim is not 2 or scale_factor is iterable use _ntuple instead of concat
-        assert scale_factor is not None and isinstance(scale_factor, (int, float))
+        assert scale_factor is not None and isinstance(scale_factor,
+                                                       (int, float))
         scale_factors = [scale_factor, scale_factor]
         # math.floor might return float in py2.7
         return [
-            int(math.floor(input.size(i + 2) * scale_factors[i])) for i in range(dim)
+            int(math.floor(input.size(i + 2) * scale_factors[i]))
+            for i in range(dim)
         ]
 elif float(torchvision.__version__[:3]) < 0.7:
     from torchvision.ops import _new_empty_tensor
@@ -87,7 +90,9 @@ class SmoothedValue(object):
         """
         if not is_dist_avail_and_initialized():
             return
-        t = torch.tensor([self.count, self.total], dtype=torch.float64, device='cuda')
+        t = torch.tensor([self.count, self.total],
+                         dtype=torch.float64,
+                         device='cuda')
         dist.barrier()
         dist.all_reduce(t)
         t = t.tolist()
@@ -117,12 +122,11 @@ class SmoothedValue(object):
         return self.deque[-1]
 
     def __str__(self):
-        return self.fmt.format(
-            median=self.median,
-            avg=self.avg,
-            global_avg=self.global_avg,
-            max=self.max,
-            value=self.value)
+        return self.fmt.format(median=self.median,
+                               avg=self.avg,
+                               global_avg=self.global_avg,
+                               max=self.max,
+                               value=self.value)
 
 
 def all_gather(data):
@@ -154,9 +158,12 @@ def all_gather(data):
     # gathering tensors of different shapes
     tensor_list = []
     for _ in size_list:
-        tensor_list.append(torch.empty((max_size,), dtype=torch.uint8, device="cuda"))
+        tensor_list.append(
+            torch.empty((max_size, ), dtype=torch.uint8, device="cuda"))
     if local_size != max_size:
-        padding = torch.empty(size=(max_size - local_size,), dtype=torch.uint8, device="cuda")
+        padding = torch.empty(size=(max_size - local_size, ),
+                              dtype=torch.uint8,
+                              device="cuda")
         tensor = torch.cat((tensor, padding), dim=0)
     dist.all_gather(tensor_list, tensor)
 
@@ -196,6 +203,7 @@ def reduce_dict(input_dict, average=True):
 
 
 class MetricLogger(object):
+
     def __init__(self, delimiter="\t"):
         self.meters = defaultdict(SmoothedValue)
         self.delimiter = delimiter
@@ -218,9 +226,7 @@ class MetricLogger(object):
     def __str__(self):
         loss_str = []
         for name, meter in self.meters.items():
-            loss_str.append(
-                "{}: {}".format(name, str(meter))
-            )
+            loss_str.append("{}: {}".format(name, str(meter)))
         return self.delimiter.join(loss_str)
 
     def synchronize_between_processes(self):
@@ -242,22 +248,13 @@ class MetricLogger(object):
         space_fmt = ':' + str(len(str(len(iterable)))) + 'd'
         if torch.cuda.is_available():
             log_msg = self.delimiter.join([
-                header,
-                '[{0' + space_fmt + '}/{1}]',
-                'eta: {eta}',
-                '{meters}',
-                'time: {time}',
-                'data: {data}',
-                'max mem: {memory:.0f}'
+                header, '[{0' + space_fmt + '}/{1}]', 'eta: {eta}', '{meters}',
+                'time: {time}', 'data: {data}', 'max mem: {memory:.0f}'
             ])
         else:
             log_msg = self.delimiter.join([
-                header,
-                '[{0' + space_fmt + '}/{1}]',
-                'eta: {eta}',
-                '{meters}',
-                'time: {time}',
-                'data: {data}'
+                header, '[{0' + space_fmt + '}/{1}]', 'eta: {eta}', '{meters}',
+                'time: {time}', 'data: {data}'
             ])
         MB = 1024.0 * 1024.0
         for obj in iterable:
@@ -268,16 +265,23 @@ class MetricLogger(object):
                 eta_seconds = iter_time.global_avg * (len(iterable) - i)
                 eta_string = str(datetime.timedelta(seconds=int(eta_seconds)))
                 if torch.cuda.is_available():
-                    print(log_msg.format(
-                        i, len(iterable), eta=eta_string,
-                        meters=str(self),
-                        time=str(iter_time), data=str(data_time),
-                        memory=torch.cuda.max_memory_allocated() / MB))
+                    print(
+                        log_msg.format(
+                            i,
+                            len(iterable),
+                            eta=eta_string,
+                            meters=str(self),
+                            time=str(iter_time),
+                            data=str(data_time),
+                            memory=torch.cuda.max_memory_allocated() / MB))
                 else:
-                    print(log_msg.format(
-                        i, len(iterable), eta=eta_string,
-                        meters=str(self),
-                        time=str(iter_time), data=str(data_time)))
+                    print(
+                        log_msg.format(i,
+                                       len(iterable),
+                                       eta=eta_string,
+                                       meters=str(self),
+                                       time=str(iter_time),
+                                       data=str(data_time)))
             i += 1
             end = time.time()
         total_time = time.time() - start_time
@@ -290,7 +294,9 @@ def get_sha():
     cwd = os.path.dirname(os.path.abspath(__file__))
 
     def _run(command):
-        return subprocess.check_output(command, cwd=cwd).decode('ascii').strip()
+        return subprocess.check_output(command,
+                                       cwd=cwd).decode('ascii').strip()
+
     sha = 'N/A'
     diff = "clean"
     branch = 'N/A'
@@ -336,14 +342,15 @@ def nested_tensor_from_tensor_list(tensor_list: List[Tensor]):
         tensor = torch.zeros(batch_shape, dtype=dtype, device=device)
         mask = torch.ones((b, h, w), dtype=torch.bool, device=device)
         for img, pad_img, m in zip(tensor_list, tensor, mask):
-            pad_img[: img.shape[0], : img.shape[1], : img.shape[2]].copy_(img)
-            m[: img.shape[1], :img.shape[2]] = False
+            pad_img[:img.shape[0], :img.shape[1], :img.shape[2]].copy_(img)
+            m[:img.shape[1], :img.shape[2]] = False
     else:
         raise ValueError('not supported')
     return NestedTensor(tensor, mask)
 
 
 class NestedTensor(object):
+
     def __init__(self, tensors, mask: Optional[Tensor]):
         self.tensors = tensors
         self.mask = mask
@@ -460,16 +467,18 @@ def init_distributed_mode(args):
 
     torch.cuda.set_device(args.gpu)
     args.dist_backend = 'nccl'
-    print('| distributed init (rank {}): {}'.format(
-        args.rank, args.dist_url), flush=True)
-    torch.distributed.init_process_group(backend=args.dist_backend, init_method=args.dist_url,
-                                         world_size=args.world_size, rank=args.rank)
+    print('| distributed init (rank {}): {}'.format(args.rank, args.dist_url),
+          flush=True)
+    torch.distributed.init_process_group(backend=args.dist_backend,
+                                         init_method=args.dist_url,
+                                         world_size=args.world_size,
+                                         rank=args.rank)
     torch.distributed.barrier()
     setup_for_distributed(args.rank == 0)
 
 
 @torch.no_grad()
-def accuracy(output, target, topk=(1,)):
+def accuracy(output, target, topk=(1, )):
     """Computes the precision@k for the specified values of k"""
     if target.numel() == 0:
         return [torch.zeros([], device=output.device)]
@@ -487,7 +496,11 @@ def accuracy(output, target, topk=(1,)):
     return res
 
 
-def interpolate(input, size=None, scale_factor=None, mode="nearest", align_corners=None):
+def interpolate(input,
+                size=None,
+                scale_factor=None,
+                mode="nearest",
+                align_corners=None):
     # type: (Tensor, Optional[List[int]], Optional[float], str, Optional[bool]) -> Tensor
     """
     Equivalent to nn.functional.interpolate, but with support for empty batch sizes.
@@ -496,9 +509,8 @@ def interpolate(input, size=None, scale_factor=None, mode="nearest", align_corne
     """
     if float(torchvision.__version__[:3]) < 0.7:
         if input.numel() > 0:
-            return torch.nn.functional.interpolate(
-                input, size, scale_factor, mode, align_corners
-            )
+            return torch.nn.functional.interpolate(input, size, scale_factor,
+                                                   mode, align_corners)
 
         output_shape = _output_size(2, input, size, scale_factor)
         output_shape = list(input.shape[:-2]) + list(output_shape)
@@ -506,20 +518,24 @@ def interpolate(input, size=None, scale_factor=None, mode="nearest", align_corne
             return _NewEmptyTensorOp.apply(input, output_shape)
         return _new_empty_tensor(input, output_shape)
     else:
-        return torchvision.ops.misc.interpolate(input, size, scale_factor, mode, align_corners)
+        return torchvision.ops.misc.interpolate(input, size, scale_factor,
+                                                mode, align_corners)
 
 
 def get_total_grad_norm(parameters, norm_type=2):
     parameters = list(filter(lambda p: p.grad is not None, parameters))
     norm_type = float(norm_type)
     device = parameters[0].grad.device
-    total_norm = torch.norm(torch.stack([torch.norm(p.grad.detach(), norm_type).to(device) for p in parameters]),
-                            norm_type)
+    total_norm = torch.norm(
+        torch.stack([
+            torch.norm(p.grad.detach(), norm_type).to(device)
+            for p in parameters
+        ]), norm_type)
     return total_norm
+
 
 def inverse_sigmoid(x, eps=1e-5):
     x = x.clamp(min=0, max=1)
     x1 = x.clamp(min=eps)
     x2 = (1 - x).clamp(min=eps)
-    return torch.log(x1/x2)
-
+    return torch.log(x1 / x2)

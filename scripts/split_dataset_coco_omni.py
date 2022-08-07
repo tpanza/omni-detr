@@ -25,7 +25,9 @@ def main():
     pointsK = 0.0
     boxesEC = 0.64
     boxesU = 0.0
-    assert sum([fully_labeled, Unsup, tagsU, tagsK, pointsU, pointsK, boxesEC, boxesU]) == 1.0
+    assert sum([
+        fully_labeled, Unsup, tagsU, tagsK, pointsU, pointsK, boxesEC, boxesU
+    ]) == 1.0
 
     # we first sample the fully label data
     # original statistics
@@ -34,7 +36,7 @@ def main():
     category = coco_api.cats
     for key, value in category.items():
         class_index_list.append(key)
-    histogram = np.zeros((num_classes,), dtype=np.int)
+    histogram = np.zeros((num_classes, ), dtype=np.int)
 
     img_ids = sorted(coco_api.imgs.keys())
     num_imgs = len(img_ids)
@@ -68,7 +70,9 @@ def main():
 
         if np.sum(mask_i) > 0:
             sampled_idx = np.random.choice(np.arange(np.size(valid_idx[0])), 1)
-            sampled_point_i = [valid_idx[1][sampled_idx][0], valid_idx[0][sampled_idx][0]]
+            sampled_point_i = [
+                valid_idx[1][sampled_idx][0], valid_idx[0][sampled_idx][0]
+            ]
             sampled_point_i = [float(item) for item in sampled_point_i]
             i_ann['point'] = sampled_point_i
         else:
@@ -76,11 +80,15 @@ def main():
                 boxes = i_ann['bbox']
                 boxes = np.array(boxes)
                 mask_i[int(boxes[1]):(int(boxes[1]) + int(boxes[3])),
-                int(boxes[0]):(int(boxes[0]) + int(boxes[2]))] = 1
+                       int(boxes[0]):(int(boxes[0]) + int(boxes[2]))] = 1
                 valid_idx = np.where(mask_i == 1)
                 if np.sum(mask_i) > 0:
-                    sampled_idx = np.random.choice(np.arange(np.size(valid_idx[0])), 1)
-                    sampled_point_i = [valid_idx[1][sampled_idx][0], valid_idx[0][sampled_idx][0]]
+                    sampled_idx = np.random.choice(
+                        np.arange(np.size(valid_idx[0])), 1)
+                    sampled_point_i = [
+                        valid_idx[1][sampled_idx][0],
+                        valid_idx[0][sampled_idx][0]
+                    ]
                     sampled_point_i = [float(item) for item in sampled_point_i]
                     i_ann['point'] = sampled_point_i
                 else:  # at least one of the box size less than 1 pixel
@@ -89,10 +97,14 @@ def main():
                     if int(boxes[3]) < 1:
                         boxes[3] = boxes[3] + 1
                     mask_i[int(boxes[1]):(int(boxes[1]) + int(boxes[3])),
-                    int(boxes[0]):(int(boxes[0]) + int(boxes[2]))] = 1
+                           int(boxes[0]):(int(boxes[0]) + int(boxes[2]))] = 1
                     valid_idx = np.where(mask_i == 1)
-                    sampled_idx = np.random.choice(np.arange(np.size(valid_idx[0])), 1)
-                    sampled_point_i = [valid_idx[1][sampled_idx][0], valid_idx[0][sampled_idx][0]]
+                    sampled_idx = np.random.choice(
+                        np.arange(np.size(valid_idx[0])), 1)
+                    sampled_point_i = [
+                        valid_idx[1][sampled_idx][0],
+                        valid_idx[0][sampled_idx][0]
+                    ]
                     sampled_point_i = [float(item) for item in sampled_point_i]
                     i_ann['point'] = sampled_point_i
             else:
@@ -101,7 +113,6 @@ def main():
         ith = ith + 1
         if ith % 10000 == 0:
             print(ith)
-
 
     # sampled statistics
     classes = [x["category_id"] for x in anns]
@@ -119,7 +130,11 @@ def main():
     sample_data['info'] = coco_api.dataset['info']
     sample_data['licenses'] = coco_api.dataset['licenses']
 
-    output_file_label = '{}{}_coco_omni_label_seed{}_{}fully{}Unsup{}tagsU{}tagsK{}pointsU{}pointsK{}boxesEC{}boxesU.json'.format(root_dir, data_set, random_seed, round(100*fully_labeled), round(100*Unsup), round(100*tagsU), round(100*tagsK), round(100*pointsU), round(100*pointsK), round(100*boxesEC), round(100*boxesU))
+    output_file_label = '{}{}_coco_omni_label_seed{}_{}fully{}Unsup{}tagsU{}tagsK{}pointsU{}pointsK{}boxesEC{}boxesU.json'.format(
+        root_dir, data_set, random_seed, round(100 * fully_labeled),
+        round(100 * Unsup), round(100 * tagsU), round(100 * tagsK),
+        round(100 * pointsU), round(100 * pointsK), round(100 * boxesEC),
+        round(100 * boxesU))
     ## save to json
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
@@ -150,7 +165,7 @@ def main():
         splitting['boxesU'] = round(num_imgs * boxesU)
 
     for key, value in splitting.items():
-        histogram = np.zeros((num_classes,), dtype=np.int)
+        histogram = np.zeros((num_classes, ), dtype=np.int)
 
         num_samples = value
         if num_samples > len(unsampled_ids):  #
@@ -175,8 +190,11 @@ def main():
             valid_idx = np.where(mask_i == 1)
 
             if np.sum(mask_i) > 0:
-                sampled_idx = np.random.choice(np.arange(np.size(valid_idx[0])), 1)
-                sampled_point_i = [valid_idx[1][sampled_idx][0], valid_idx[0][sampled_idx][0]]
+                sampled_idx = np.random.choice(
+                    np.arange(np.size(valid_idx[0])), 1)
+                sampled_point_i = [
+                    valid_idx[1][sampled_idx][0], valid_idx[0][sampled_idx][0]
+                ]
                 sampled_point_i = [float(item) for item in sampled_point_i]
                 i_ann['point'] = sampled_point_i
             else:
@@ -184,12 +202,18 @@ def main():
                     boxes = i_ann['bbox']
                     boxes = np.array(boxes)
                     mask_i[int(boxes[1]):(int(boxes[1]) + int(boxes[3])),
-                    int(boxes[0]):(int(boxes[0]) + int(boxes[2]))] = 1
+                           int(boxes[0]):(int(boxes[0]) + int(boxes[2]))] = 1
                     valid_idx = np.where(mask_i == 1)
                     if np.sum(mask_i) > 0:
-                        sampled_idx = np.random.choice(np.arange(np.size(valid_idx[0])), 1)
-                        sampled_point_i = [valid_idx[1][sampled_idx][0], valid_idx[0][sampled_idx][0]]
-                        sampled_point_i = [float(item) for item in sampled_point_i]
+                        sampled_idx = np.random.choice(
+                            np.arange(np.size(valid_idx[0])), 1)
+                        sampled_point_i = [
+                            valid_idx[1][sampled_idx][0],
+                            valid_idx[0][sampled_idx][0]
+                        ]
+                        sampled_point_i = [
+                            float(item) for item in sampled_point_i
+                        ]
                         i_ann['point'] = sampled_point_i
                     else:  # at least one of the box size less than 1 pixel
                         if int(boxes[2]) < 1:
@@ -197,11 +221,18 @@ def main():
                         if int(boxes[3]) < 1:
                             boxes[3] = boxes[3] + 1
                         mask_i[int(boxes[1]):(int(boxes[1]) + int(boxes[3])),
-                        int(boxes[0]):(int(boxes[0]) + int(boxes[2]))] = 1
+                               int(boxes[0]):(int(boxes[0]) +
+                                              int(boxes[2]))] = 1
                         valid_idx = np.where(mask_i == 1)
-                        sampled_idx = np.random.choice(np.arange(np.size(valid_idx[0])), 1)
-                        sampled_point_i = [valid_idx[1][sampled_idx][0], valid_idx[0][sampled_idx][0]]
-                        sampled_point_i = [float(item) for item in sampled_point_i]
+                        sampled_idx = np.random.choice(
+                            np.arange(np.size(valid_idx[0])), 1)
+                        sampled_point_i = [
+                            valid_idx[1][sampled_idx][0],
+                            valid_idx[0][sampled_idx][0]
+                        ]
+                        sampled_point_i = [
+                            float(item) for item in sampled_point_i
+                        ]
                         i_ann['point'] = sampled_point_i
                 else:
                     i_ann['point'] = []
@@ -235,7 +266,8 @@ def main():
                 if ith > skip_to_next:
                     ith_bin += 1
                     cur_delta = delta[ith_bin]
-                    skip_to_next = skip_to_next + distribution_extreme[ith_bin] * len(anns)
+                    skip_to_next = skip_to_next + distribution_extreme[
+                        ith_bin] * len(anns)
                     print('to next')
                 if 'iscrowd' not in i_ann or i_ann['iscrowd'] == 0:
                     box_i = i_ann['bbox']
@@ -247,15 +279,21 @@ def main():
                     y1 = boxes[3]
 
                     # add noise to each of the two nodes
-                    cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0), (y1 - y0)
+                    cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, (x1 -
+                                                                  x0), (y1 -
+                                                                        y0)
                     mean = (y0, x0)
                     cov = [[h / cur_delta, 0], [0, w / cur_delta]]
-                    sampled_point_i = np.random.multivariate_normal(mean, cov, 1)
-                    x0_new, y0_new = sampled_point_i[0, 1], sampled_point_i[0, 0]
+                    sampled_point_i = np.random.multivariate_normal(
+                        mean, cov, 1)
+                    x0_new, y0_new = sampled_point_i[0, 1], sampled_point_i[0,
+                                                                            0]
 
                     mean = (y1, x1)
-                    sampled_point_i = np.random.multivariate_normal(mean, cov, 1)
-                    x1_new, y1_new = sampled_point_i[0, 1], sampled_point_i[0, 0]
+                    sampled_point_i = np.random.multivariate_normal(
+                        mean, cov, 1)
+                    x1_new, y1_new = sampled_point_i[0, 1], sampled_point_i[0,
+                                                                            0]
 
                     x0 = min(x0_new, x1_new)
                     x1 = max(x0_new, x1_new)
@@ -296,7 +334,11 @@ def main():
     unsample_data['info'] = coco_api.dataset['info']
     unsample_data['licenses'] = coco_api.dataset['licenses']
 
-    output_file_unlabel = '{}{}_coco_omni_unlabel_seed{}_{}fully{}Unsup{}tagsU{}tagsK{}pointsU{}pointsK{}boxesEC{}boxesU.json'.format(root_dir, data_set, random_seed, round(100*fully_labeled), round(100*Unsup), round(100*tagsU), round(100*tagsK), round(100*pointsU), round(100*pointsK), round(100*boxesEC), round(100*boxesU))
+    output_file_unlabel = '{}{}_coco_omni_unlabel_seed{}_{}fully{}Unsup{}tagsU{}tagsK{}pointsU{}pointsK{}boxesEC{}boxesU.json'.format(
+        root_dir, data_set, random_seed, round(100 * fully_labeled),
+        round(100 * Unsup), round(100 * tagsU), round(100 * tagsK),
+        round(100 * pointsU), round(100 * pointsK), round(100 * boxesEC),
+        round(100 * boxesU))
     ## save to json
     with open(output_file_unlabel, 'w') as f:
         print('writing to json output:', output_file_unlabel)

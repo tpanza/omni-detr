@@ -11,18 +11,24 @@ import torch
 
 def to_cuda(samples, targets, device):
     samples = samples.to(device, non_blocking=True)
-    targets = [{k: v.to(device, non_blocking=True) for k, v in t.items()} for t in targets]
+    targets = [{k: v.to(device, non_blocking=True)
+                for k, v in t.items()} for t in targets]
     return samples, targets
 
 
-def to_cuda_semi(samples_q, targets_q, records_q, samples_k, targets_k, records_k, indicators, labeltypes, device):
+def to_cuda_semi(samples_q, targets_q, records_q, samples_k, targets_k,
+                 records_k, indicators, labeltypes, device):
     samples_q = samples_q.to(device, non_blocking=True)
     samples_k = samples_k.to(device, non_blocking=True)
-    targets_q = [{k: v.to(device, non_blocking=True) for k, v in t.items()} for t in targets_q]
-    targets_k = [{k: v.to(device, non_blocking=True) for k, v in t.items()} for t in targets_k]
+    targets_q = [{k: v.to(device, non_blocking=True)
+                  for k, v in t.items()} for t in targets_q]
+    targets_k = [{k: v.to(device, non_blocking=True)
+                  for k, v in t.items()} for t in targets_k]
     return samples_q, targets_q, records_q, samples_k, targets_k, records_k, indicators, labeltypes
 
+
 class data_prefetcher():
+
     def __init__(self, loader, device, prefetch=True):
         self.loader = iter(loader)
         self.prefetch = prefetch
@@ -46,7 +52,8 @@ class data_prefetcher():
         # at the time we start copying to next_*:
         # self.stream.wait_stream(torch.cuda.current_stream())
         with torch.cuda.stream(self.stream):
-            self.next_samples, self.next_targets = to_cuda(self.next_samples, self.next_targets, self.device)
+            self.next_samples, self.next_targets = to_cuda(
+                self.next_samples, self.next_targets, self.device)
             # more code for the alternative if record_stream() doesn't work:
             # copy_ will record the use of the pinned source tensor in this side stream.
             # self.next_input_gpu.copy_(self.next_input, non_blocking=True)
@@ -81,8 +88,8 @@ class data_prefetcher():
         return samples, targets
 
 
-
 class data_prefetcher_semi():
+
     def __init__(self, loader, device, prefetch=True):
         self.loader = iter(loader)
         self.prefetch = prefetch
@@ -93,7 +100,8 @@ class data_prefetcher_semi():
 
     def preload(self):
         try:
-            self.next_samples_q, self.next_targets_q, self.next_records_q, self.next_samples_k, self.next_targets_k, self.next_records_k, self.next_indicators, self.next_labeltypes = next(self.loader)
+            self.next_samples_q, self.next_targets_q, self.next_records_q, self.next_samples_k, self.next_targets_k, self.next_records_k, self.next_indicators, self.next_labeltypes = next(
+                self.loader)
         except StopIteration:
             self.next_samples_q = None
             self.next_targets_q = None
@@ -112,7 +120,10 @@ class data_prefetcher_semi():
         # at the time we start copying to next_*:
         # self.stream.wait_stream(torch.cuda.current_stream())
         with torch.cuda.stream(self.stream):
-            self.next_samples_q, self.next_targets_q, self.next_records_q, self.next_samples_k, self.next_targets_k, self.next_records_k, self.next_indicators, self.next_labeltypes = to_cuda_semi(self.next_samples_q, self.next_targets_q, self.next_records_q, self.next_samples_k, self.next_targets_k, self.next_records_k, self.next_indicators, self.next_labeltypes, self.device)
+            self.next_samples_q, self.next_targets_q, self.next_records_q, self.next_samples_k, self.next_targets_k, self.next_records_k, self.next_indicators, self.next_labeltypes = to_cuda_semi(
+                self.next_samples_q, self.next_targets_q, self.next_records_q,
+                self.next_samples_k, self.next_targets_k, self.next_records_k,
+                self.next_indicators, self.next_labeltypes, self.device)
             # more code for the alternative if record_stream() doesn't work:
             # copy_ will record the use of the pinned source tensor in this side stream.
             # self.next_input_gpu.copy_(self.next_input, non_blocking=True)
@@ -151,8 +162,11 @@ class data_prefetcher_semi():
             self.preload()
         else:
             try:
-                samples_q, targets_q, records_q, samples_k, targets_k, records_k, indicators, labeltypes = next(self.loader)
-                samples_q, targets_q, records_q, samples_k, targets_k, records_k, indicators, labeltypes = to_cuda_semi(samples_q, targets_q, records_q, samples_k, targets_k, records_k, indicators, labeltypes, self.device)
+                samples_q, targets_q, records_q, samples_k, targets_k, records_k, indicators, labeltypes = next(
+                    self.loader)
+                samples_q, targets_q, records_q, samples_k, targets_k, records_k, indicators, labeltypes = to_cuda_semi(
+                    samples_q, targets_q, records_q, samples_k, targets_k,
+                    records_k, indicators, labeltypes, self.device)
             except StopIteration:
                 samples_q = None
                 targets_q = None

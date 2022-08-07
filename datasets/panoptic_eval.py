@@ -19,6 +19,7 @@ except ImportError:
 
 
 class PanopticEvaluator(object):
+
     def __init__(self, ann_file, ann_folder, output_dir="panoptic_eval"):
         self.gt_json = ann_file
         self.gt_folder = ann_folder
@@ -30,7 +31,8 @@ class PanopticEvaluator(object):
 
     def update(self, predictions):
         for p in predictions:
-            with open(os.path.join(self.output_dir, p["file_name"]), "wb") as f:
+            with open(os.path.join(self.output_dir, p["file_name"]),
+                      "wb") as f:
                 f.write(p.pop("png_string"))
 
         self.predictions += predictions
@@ -45,8 +47,12 @@ class PanopticEvaluator(object):
     def summarize(self):
         if utils.is_main_process():
             json_data = {"annotations": self.predictions}
-            predictions_json = os.path.join(self.output_dir, "predictions.json")
+            predictions_json = os.path.join(self.output_dir,
+                                            "predictions.json")
             with open(predictions_json, "w") as f:
                 f.write(json.dumps(json_data))
-            return pq_compute(self.gt_json, predictions_json, gt_folder=self.gt_folder, pred_folder=self.output_dir)
+            return pq_compute(self.gt_json,
+                              predictions_json,
+                              gt_folder=self.gt_folder,
+                              pred_folder=self.output_dir)
         return None

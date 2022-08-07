@@ -11,6 +11,7 @@ import cv2
 START_BOUNDING_BOX_ID = 1
 PRE_DEFINE_CATEGORIES = None
 
+
 def get(root, name):
     vars = root.findall(name)
     return vars
@@ -21,10 +22,8 @@ def get_and_check(root, name, length):
     if len(vars) == 0:
         raise ValueError("Can not find %s in %s." % (name, root.tag))
     if length > 0 and len(vars) != length:
-        raise ValueError(
-            "The size of %s is supposed to be %d, but is %d."
-            % (name, length, len(vars))
-        )
+        raise ValueError("The size of %s is supposed to be %d, but is %d." %
+                         (name, length, len(vars)))
     if length == 1:
         vars = vars[0]
     return vars
@@ -36,7 +35,8 @@ def get_filename_as_int(filename):
         filename = os.path.splitext(os.path.basename(filename))[0]
         return int(filename)
     except:
-        raise ValueError("Filename %s is supposed to be an integer." % (filename))
+        raise ValueError("Filename %s is supposed to be an integer." %
+                         (filename))
 
 
 def get_categories(xml_files):
@@ -60,7 +60,12 @@ def get_categories(xml_files):
 
 
 def convert(xml_files, json_file):
-    json_dict = {"images": [], "type": "instances", "annotations": [], "categories": []}
+    json_dict = {
+        "images": [],
+        "type": "instances",
+        "annotations": [],
+        "categories": []
+    }
     if PRE_DEFINE_CATEGORIES is not None:
         categories = PRE_DEFINE_CATEGORIES
     else:
@@ -93,7 +98,8 @@ def convert(xml_files, json_file):
 
         # we rescale the image if its size greater than 800, because in this dataset, the image is too big, for weak aug, we can't accept such big image because of memory issue
         if width > 600 or height > 600:
-            if (width <= height and width == 600) or (height <= width and height == 600):
+            if (width <= height and width == 600) or (height <= width
+                                                      and height == 600):
                 oh = height
                 ow = width
             if width < height:
@@ -105,7 +111,7 @@ def convert(xml_files, json_file):
 
             original_img = cv2.imread('../bees/ML-Data/' + filename_original)
             resized_img = cv2.resize(original_img, (ow, oh))
-            ratios = [float(ow)/float(width), float(oh)/float(height)]
+            ratios = [float(ow) / float(width), float(oh) / float(height)]
             ratio_width, ratio_height = ratios
             cv2.imwrite('../bees/ML-Data/' + filename_original, resized_img)
 
@@ -197,14 +203,16 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Convert Pascal VOC annotation to COCO format."
-    )
+        description="Convert Pascal VOC annotation to COCO format.")
 
-    parser.add_argument('--xml_dir', default="../bees/ML-Data/",
-                        help="Directory path to xml files.", type=str)
+    parser.add_argument('--xml_dir',
+                        default="../bees/ML-Data/",
+                        help="Directory path to xml files.",
+                        type=str)
     parser.add_argument('--json_file',
                         default="../bees/instances_bees.json",
-                        help="Output COCO format json file.", type=str)
+                        help="Output COCO format json file.",
+                        type=str)
 
     args = parser.parse_args()
     xml_files = glob.glob(os.path.join(args.xml_dir, "*.xml"))

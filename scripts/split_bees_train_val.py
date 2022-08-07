@@ -24,7 +24,7 @@ def main():
 
     img_ids = sorted(coco_api.imgs.keys())
     num_imgs = len(img_ids)
-    num_samples = round(num_imgs*ratio_label)
+    num_samples = round(num_imgs * ratio_label)
     sample_ids = random.sample(img_ids, num_samples)
     sample_ids = sorted(sample_ids)
     imgs_label = coco_api.loadImgs(sample_ids)

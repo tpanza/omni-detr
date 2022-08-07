@@ -81,7 +81,7 @@ def main():
     data['licenses'] = coco_api.dataset['licenses']
     output_file_label = root_dir + 'instances_valminusminival2014_w_indicator.json'
 
-    ## save to json
+    # save to json
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
         json.dump(data, f, sort_keys=True)
@@ -159,7 +159,7 @@ def main():
     data['info'] = coco_api.dataset['info']
     data['licenses'] = coco_api.dataset['licenses']
     output_file_label = root_dir + 'instances_train2014_w_randompoint_indicator.json'
-    ## save to json
+    # save to json
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
         json.dump(data, f, sort_keys=True)

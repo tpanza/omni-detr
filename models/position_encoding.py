@@ -93,8 +93,8 @@ class PositionEmbeddingLearned(nn.Module):
             x_emb.unsqueeze(0).repeat(h, 1, 1),
             y_emb.unsqueeze(1).repeat(1, w, 1),
         ],
-                        dim=-1).permute(2, 0, 1).unsqueeze(0).repeat(
-                            x.shape[0], 1, 1, 1)
+            dim=-1).permute(2, 0, 1).unsqueeze(0).repeat(
+            x.shape[0], 1, 1, 1)
         return pos
 
 

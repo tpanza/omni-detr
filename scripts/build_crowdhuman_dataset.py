@@ -88,7 +88,7 @@ def main():
     sample_data['categories'] = [list(coco_api.cats.values())[0]]
 
     output_file_label = '{}{}_fullbody.json'.format(root_dir, data_set)
-    ## save to json
+    # save to json
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
         json.dump(sample_data, f, sort_keys=True)
@@ -139,7 +139,7 @@ def main():
     sample_data['annotations'] = anns
     sample_data['categories'] = [list(coco_api.cats.values())[0]]
     output_file_label = '{}{}_fullbody.json'.format(root_dir, 'test')
-    ## save to json
+    # save to json
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
         json.dump(sample_data, f, sort_keys=True)

@@ -109,7 +109,7 @@ def main():
         round(100 * Unsup), round(100 * tagsU), round(100 * tagsK),
         round(100 * pointsU), round(100 * pointsK), round(100 * boxesEC),
         round(100 * boxesU))
-    ## save to json
+    # save to json
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
         json.dump(sample_data, f, sort_keys=True)
@@ -272,7 +272,7 @@ def main():
         round(100 * Unsup), round(100 * tagsU), round(100 * tagsK),
         round(100 * pointsU), round(100 * pointsK), round(100 * boxesEC),
         round(100 * boxesU))
-    ## save to json
+    # save to json
     with open(output_file_unlabel, 'w') as f:
         print('writing to json output:', output_file_unlabel)
         json.dump(unsample_data, f, sort_keys=True)

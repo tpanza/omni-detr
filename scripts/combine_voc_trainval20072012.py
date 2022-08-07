@@ -54,7 +54,7 @@ def main():
     root_dir_new = '../voc/VOCdevkit/VOC20072012trainval/'
     data_set_name = 'instances_VOC_trainval20072012'
     output_file_label = '{}{}.json'.format(root_dir_new, data_set_name)
-    ## save to json
+    # save to json
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
         json.dump(sample_data, f, sort_keys=True)

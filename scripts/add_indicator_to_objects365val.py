@@ -47,7 +47,7 @@ def main():
     data['annotations'] = anns
     data['categories'] = list(coco_api.cats.values())
     output_file_label = root_dir + 'objects365_val_w_indicator.json'
-    ## save to json
+    # save to json
     with open(output_file_label, 'w') as f:
         print('writing to json output:', output_file_label)
         json.dump(data, f, sort_keys=True)

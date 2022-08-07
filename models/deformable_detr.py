@@ -282,6 +282,7 @@ class SetCriterion(nn.Module):
             dtype=src_logits.dtype,
             layout=src_logits.layout,
             device=src_logits.device)
+
         target_classes_onehot.scatter_(2, target_classes.unsqueeze(-1), 1)
 
         target_classes_onehot = target_classes_onehot[:, :, :-1]
@@ -518,6 +519,7 @@ class SetCriterion_semi(nn.Module):
             dtype=src_logits.dtype,
             layout=src_logits.layout,
             device=src_logits.device)
+
         target_classes_onehot.scatter_(2, target_classes.unsqueeze(-1), 1)
 
         target_classes_onehot = target_classes_onehot[:, :, :-1]
@@ -772,6 +774,7 @@ class PostProcess(nn.Module):
             out_logits.shape[0], -1),
             100,
             dim=1)
+
         scores = topk_values
         topk_boxes = topk_indexes // out_logits.shape[2]
         labels = topk_indexes % out_logits.shape[2]

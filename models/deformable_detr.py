@@ -19,8 +19,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from util.misc import (NestedTensor,
-                       inverse_sigmoid,
+from util.misc import (NestedTensor, inverse_sigmoid,
                        nested_tensor_from_tensor_list)
 
 from .backbone import build_backbone

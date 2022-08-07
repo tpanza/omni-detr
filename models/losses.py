@@ -8,7 +8,9 @@ from util import box_ops
 from util.misc import (accuracy, get_world_size, interpolate,
                        is_dist_avail_and_initialized,
                        nested_tensor_from_tensor_list)
-from .segmentation import dice_loss, sigmoid_focal_loss, sigmoid_weighted_focal_loss
+
+from .segmentation import (dice_loss, sigmoid_focal_loss,
+                           sigmoid_weighted_focal_loss)
 
 
 class SetCriterion(nn.Module):
